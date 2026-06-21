@@ -21,6 +21,13 @@
         
         .status-pending { background-color: #f1c40f; color: white; padding: 5px; border-radius: 4px; border: none; cursor: pointer; }
         .status-done { background-color: #27ae60; color: white; padding: 5px; border-radius: 4px; border: none; cursor: pointer; }
+
+        /* تعديلات التجاوب مع الهاتف */
+        @media screen and (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; padding: 10px; box-sizing: border-box; }
+            .main-content { margin-right: 0; padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -58,16 +65,13 @@
     </div>
 
     <script>
-        // تحميل البيانات عند فتح الصفحة
         window.onload = function() {
             let savedData = JSON.parse(localStorage.getItem('myTableData')) || [];
-            let table = document.getElementById("myTable").getElementsByTagName('tbody')[0];
             savedData.forEach(item => {
                 insertRowToTable(item.name, item.status);
             });
         };
 
-        // دالة مساعدة لإدراج الصفوف
         function insertRowToTable(name, status) {
             let table = document.getElementById("myTable").getElementsByTagName('tbody')[0];
             let newRow = table.insertRow();
@@ -76,7 +80,6 @@
             newRow.insertCell(2).innerHTML = `<button class="btn-del" onclick="deleteRow(this)">حذف</button>`;
         }
 
-        // إنشاء قائمة الاختيار
         function createSelect(status) {
             return `
                 <select onchange="updateColor(this)" class="${status}">
@@ -86,31 +89,25 @@
             `;
         }
 
-        // إضافة صف جديد
         function addRow() {
             let name = document.getElementById('nameInput').value;
             if(name === "") return;
-            
             insertRowToTable(name, "status-pending");
             saveData();
-            
             document.getElementById('myModal').style.display = 'none';
             document.getElementById('nameInput').value = "";
         }
 
-        // حذف صف
         function deleteRow(btn) {
             btn.parentNode.parentNode.remove();
             saveData();
         }
 
-        // تحديث اللون
         function updateColor(selectElement) {
             selectElement.className = selectElement.value;
             saveData();
         }
 
-        // حفظ البيانات في localStorage
         function saveData() {
             let table = document.getElementById("myTable");
             let data = [];
